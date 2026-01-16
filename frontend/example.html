@@ -1,42 +1,36 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>T-Bank Payment Integration</title>
-    <script src="include-tbank.js"></script>
+    <meta charset="UTF-8" />
+    <title>T-Bank Demo</title>
+
+    <script src="https://securepay.tinkoff.ru/html/payForm/js/tinkoff_v2.js"></script>
+    <script src="/static/tbank-widget.js"></script>
 </head>
 <body>
-<h1>Оплата заказа</h1>
-<div id="payment-container"></div>
+
+<button onclick="startPay()">Оплатить</button>
 
 <script>
-    const tbank = new TBankPaymentIntegration({
-        terminalKey: '1673598390848DEMO',
-        containerId: 'payment-container',
-        widgetTypes: ['sbp', 'tpay', 'bnpl'],
-        backendUrl: 'https://al-home-test.r/api/payment/initiate',
+    async function startPay() {
+        const res = await fetch("/api/payments/init", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                orderId: "order_" + Date.now(),
+                amount: 15000,
+                description: "Тестовая оплата"
+            })
+        });
 
-        onSuccess: function(paymentData) {
-            console.log('Payment successful:', paymentData);
-            alert('Оплата прошла успешно!');
-        },
+        const data = await res.json();
 
-        onError: function(error) {
-            console.error('Payment error:', error);
-            alert('Ошибка при оплате: ' + error.message);
-        },
-
-        customStyles: {
-            backgroundColor: '#f9f9f9',
-            boxShadow: '0 2px 10px rgba(0,0,0,0.1)'
-        }
-    });
-
-    // Optional: Update payment details
-    setTimeout(() => {
-        tbank.updatePayment(1.50, 'order_12345', 'Оплата заказа #12345');
-    }, 1000);
+        TBank.pay({
+            paymentId: data.PaymentID,
+            mode: "popup" // или redirect
+        });
+    }
 </script>
+
 </body>
 </html>
