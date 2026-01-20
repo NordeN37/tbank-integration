@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Оплата</title>
+</head>
+<body>
+<div id="paymentContainer"></div>
+</body>
+<script>
+    /**
+     * URL - это URL вашего backend-сервиса, который вызовет метод «Инициировать платеж» и вернет PaymentURL
+     * @type {string}
+     */
+    const URL = window.location.origin+'/pay';
+    /**
+     * INIT_PARAMS - это необходимые параметры тела запроса, которые принимает ваш backend-сервис
+     * @type object
+     */
+    const INIT_PARAMS = {};
+</script>
+<script
+        async
+        onload="onPaymentIntegrationLoad()"
+        src="https://integrationjs.tbank.ru/integration.js"
+></script>
+<script>
+    const initConfig = {
+        terminalKey: '1673598390848', // Значение TerminalKey из личного кабинета
+        product: 'eacq',
+        features: {
+            payment: {
+                container: document.getElementById('paymentContainer'),
+                paymentStartCallback: async () => {
+                    const res = await new PaymentIntegration.Helpers().request(URL, 'POST', INIT_PARAMS);
+                    return res.PaymentURL;
+                },
+            },
+        },
+    };
+
+    function onPaymentIntegrationLoad() {
+        PaymentIntegration.init(initConfig).then().catch();
+    }
+</script>
+</html>

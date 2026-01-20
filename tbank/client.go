@@ -1,6 +1,6 @@
 package tbank
 
-const baseURL = "https://securepayments.tbank.ru/eacq/v2"
+const baseURL = "https://securepay.tinkoff.ru/v2"
 
 type Client struct {
 	cfg Config
