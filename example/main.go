@@ -71,7 +71,7 @@ func (s *Server) PaymentHandler(w http.ResponseWriter, r *http.Request) {
 		Description: "Оплата заказа #123",
 		Receipt: tbank.InitRequestReceipt{
 			Email:    "test@test.ru",
-			Phone:    "+79997309293",
+			Phone:    "+79999999999",
 			Taxation: "usn_income",
 			Items: []tbank.InitRequestReceiptItems{
 				tbank.InitRequestReceiptItems{
